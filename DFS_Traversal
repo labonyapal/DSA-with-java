@@ -43,6 +43,11 @@ public class Main {
             t=sc.nextInt();
             addEdge(adj,s, t );
         }
+       // to traverse lexographically
+        for (int i = 0; i <= v; i++) {
+            Collections.sort(adj.get(i));
+        }
+
         ArrayList<Integer> halum = DFS(adj);
         
         for(int i=0; i<halum.size(); i++)
