@@ -62,6 +62,16 @@ public class Main {
         for(int i : adj.get(x)){
             System.out.print(i+" ");
         }
+// cod efor printing adjacency list
+ System.out.println();
+        for(int j=1; j<adj.size(); j++){
+              System.out.print("adjecancy list for " + j +" : ");
+        for(int i : adj.get(j)){
+          
+            System.out.print(i+" ");
+        }
+        System.out.println();
+        }
     }
 }
 
