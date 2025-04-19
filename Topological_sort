@@ -1,0 +1,61 @@
+import java.util.*;
+
+public class Main {
+    public static void topoSortUtil(ArrayList<ArrayList<Integer>> adj, boolean[] visited, Stack<Integer> stack, int v) {
+        visited[v] = true;
+        for (int neighbor : adj.get(v)) {
+            if (!visited[neighbor]) {
+                topoSortUtil(adj, visited, stack, neighbor);
+            }
+        }
+        stack.push(v);
+    }
+
+    public static List<Integer> topologicalSort(ArrayList<ArrayList<Integer>> adj, int vCount) {
+        boolean[] visited = new boolean[vCount + 1];
+        Stack<Integer> stack = new Stack<>();
+
+        for (int i = 1; i <= vCount; i++) {
+            if (!visited[i]) {
+                topoSortUtil(adj, visited, stack, i);
+            }
+        }
+
+        List<Integer> result = new ArrayList<>();
+        while (!stack.isEmpty()) {
+            result.add(stack.pop());
+        }
+        return result;
+    }
+
+    public static void addEdge(ArrayList<ArrayList<Integer>> adj, int u, int v) {
+        adj.get(u).add(v); // Directed edge u -> v
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int v = sc.nextInt(); // number of vertices
+        int e = sc.nextInt(); // number of edges
+
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i <= v; i++) {
+            adj.add(new ArrayList<>());
+        }
+
+        for (int i = 0; i < e; i++) {
+            int u = sc.nextInt();
+            int w = sc.nextInt();
+            addEdge(adj, u, w); // u -> w
+        }
+
+        // Optional: Sort neighbors to get lexicographically smallest topological order
+        for (int i = 0; i <= v; i++) {
+            Collections.sort(adj.get(i));
+        }
+
+        List<Integer> sorted = topologicalSort(adj, v);
+        for (int node : sorted) {
+            System.out.print(node + " ");
+        }
+    }
+}
