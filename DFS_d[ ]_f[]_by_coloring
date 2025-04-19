@@ -1,0 +1,85 @@
+import java.util.*;
+
+public class Main {
+    static final int white = 0;
+    static final int grey = 1;
+    static final int black = 2;
+    static int time = 0;
+
+    public static void DFS(List<List<Integer>> adj, int v) {
+        int[] color = new int[v + 1];
+        int[] prev = new int[v + 1];
+        int[] d = new int[v + 1];
+        int[] f = new int[v + 1];
+
+        for (int u = 1; u <= v; u++) {
+            color[u] = white;
+            prev[u] = -1;  // ✅ fixed
+            d[u] = Integer.MAX_VALUE;
+            f[u] = Integer.MAX_VALUE;
+        }
+
+        time = 0;
+
+        for (int u = 1; u <= v; u++) {
+            if (color[u] == white) {
+                DFS_Visit(adj, u, color, prev, d, f);  // ✅ fixed name
+            }
+        }
+
+        System.out.println();
+        for (int u = 1; u <= v; u++) {
+            System.out.println("Vertex: " + u +
+                ", Discovery Time: " + d[u] +
+                ", Finish Time: " + f[u] +
+                ", Predecessor: " + (prev[u] == -1 ? "None" : prev[u]));
+        }
+    }
+
+    public static void DFS_Visit(List<List<Integer>> adj, int u, int[] color, int[] prev, int[] d, int[] f) {
+        color[u] = grey;
+        time++;
+        d[u] = time;
+
+        for (int v : adj.get(u)) {
+            if (color[v] == white) {
+                prev[v] = u;
+                DFS_Visit(adj, v, color, prev, d, f);
+            }
+        }
+
+        color[u] = black;
+        time++;
+        f[u] = time;
+    }
+
+    public static void addEdge(List<List<Integer>> adj, int u, int v) {
+        adj.get(u).add(v);
+        adj.get(v).add(u); // For undirected graph
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int V = sc.nextInt(); // Number of vertices
+        int E = sc.nextInt(); // Number of edges
+
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i <= V; i++) {
+            adj.add(new ArrayList<>());
+        }
+
+        // Input edges
+        for (int i = 0; i < E; i++) {
+            int u = sc.nextInt();
+            int v = sc.nextInt();
+            addEdge(adj, u, v);
+        }
+
+        // Optional: sort adjacency lists for consistent traversal order
+        for (int i = 1; i <= V; i++) {
+            Collections.sort(adj.get(i));
+        }
+
+        DFS(adj, V);
+    }
+}
