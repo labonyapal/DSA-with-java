@@ -68,12 +68,15 @@ public class Main {
         ArrayList<ArrayList<Integer>> result = findSCC(v, adj);
 
         System.out.println("Strongly Connected Components:");
+int pak=0;
         for (ArrayList<Integer> component : result) {
             Collections.sort(component); // optional: to sort inside component
             for (int node : component) {
                 System.out.print(node + " ");
+pak++;
             }
             System.out.println();
+           System.out.println("number of strongly connected component " + pak);
         }
     }
 }
