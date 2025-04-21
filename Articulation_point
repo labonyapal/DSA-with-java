@@ -1,0 +1,69 @@
+import java.util.*;
+
+public class Main {
+
+    public static void dfs(int node, ArrayList<ArrayList<Integer>> adj, int[] vis, int skip) {
+        vis[node] = 1;
+        for (int neighbor : adj.get(node)) {
+            if (vis[neighbor] == 0 && neighbor != skip) {
+                dfs(neighbor, adj, vis, skip);
+            }
+        }
+    }
+
+    public static ArrayList<Integer> findArticulationPoints(int v, ArrayList<ArrayList<Integer>> adj) {
+        ArrayList<Integer> articulationPoints = new ArrayList<>();
+         
+        for (int i = 1; i <= v; i++) {
+            int[] vis = new int[v + 1];
+            vis[i] = 1; // Pretend node 'i' is removed
+
+            int comp = 0;
+            for (int j = 1; j <= v; j++) {
+                if (vis[j] == 0) {
+                    dfs(j, adj, vis, i);
+                    comp++;
+                }
+            }
+
+            if (comp > 1) {
+                articulationPoints.add(i);
+            }
+        }
+
+        return articulationPoints;
+    }
+
+    public static void addEdge(ArrayList<ArrayList<Integer>> adj, int u, int v) {
+        adj.get(u).add(v);  // Undirected edge now!
+        adj.get(v).add(u);  // Add reverse direction as well
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int v = sc.nextInt(); // vertices
+        int e = sc.nextInt(); // edges
+
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i <= v; i++) {
+            adj.add(new ArrayList<>());
+        }
+
+        for (int i = 0; i < e; i++) {
+            int u = sc.nextInt();
+            int w = sc.nextInt();
+            addEdge(adj, u, w); // Now treating as undirected
+        }
+
+        ArrayList<Integer> articulationPoints = findArticulationPoints(v, adj);
+
+        if (articulationPoints.isEmpty()) {
+            System.out.println("No articulation points found. Output: -1");
+        } else {
+            System.out.println("Articulation Points:");
+            for (int point : articulationPoints) {
+                System.out.println("Node " + point);
+            }
+        }
+    }
+}
